@@ -1,24 +1,24 @@
-import React, {useState, useEffect} from "react";
-// importo react y el hook useState
-// create your first component
-const Home = () => { // declaro los estados//
-    const [pendientes, setPendientes] = useState("")
-    // 1. creamos un estado del input pendientes
-    // [espacio donde guardo los valores,funcion que actualiza los valores]
-    // creo funcion para ejecutar la actualizacion del valor inicial
-    const [info, setInfo] = useState([]); // 2. creamos un estado de lo que se guarda en el array
+import React, {useState, useEffect} from "react"; // importo react y el hook useState
 
-    const deletePendientes = (indexItem) => {
+// create your first component
+
+
+const Home = () => { // Declaro los estados "pendientes" y "info" usando el hook useState. El primero almacena el valor de un input de texto y el segundo es un array donde se guardan las tareas pendientes.
+
+    const [pendientes, setPendientes] = useState("")
+
+    const [info, setInfo] = useState([]); 
+
+    const deletePendientes = (indexItem) => { // Creo la función deletePendientes que elimina una tarea pendiente específica del array info usando la función setInfo para actualizar el estado.
         setInfo((prevState) => prevState.filter((listItems, index) => index !== indexItem));
     };
-    function agregarPendientes(e) {
+    function agregarPendientes(e) { // Creo una función agregarPendientes que agrega una nueva tarea pendiente al array info usando la función concat y se vacía el valor de pendientes para el siguiente ingreso.
         e.preventDefault()
         setInfo(info.concat({label: pendientes, done: false}))
         setPendientes("")
     }
 
-
-    function crearUsuario() {
+    function crearUsuario() { // Creo una función crearUsuario que hace una llamada a un API para crear un usuario utilizando el método fetch y el método POST.
         fetch(`https://assets.breatheco.de/apis/fake/todos/user/gmm`, {
             method: 'POST',
             headers: {
@@ -30,12 +30,12 @@ const Home = () => { // declaro los estados//
     }
     console.log(crearUsuario())
 
-    function obtenerInfo() {
+    function obtenerInfo() { // Creo una función obtenerInfo que hace una llamada a un API para obtener la información del usuario y se guarda en el estado info usando el método GET y la función setInfo.
         fetch('https://assets.breatheco.de/apis/fake/todos/user/gmm', {method: 'GET'}).then((response) => response.json()).then((data) => setInfo(data));
     }
 
 
-    function actualizarInfo() {
+    function actualizarInfo() { // Creo una función actualizarInfo que hace una llamada a un API para actualizar la información del usuario usando el método PUT.
         fetch('https://assets.breatheco.de/apis/fake/todos/user/gmm', {
             method: 'PUT',
             headers: {
@@ -47,7 +47,7 @@ const Home = () => { // declaro los estados//
     }
     console.log(actualizarInfo())
 
-    function eliminarInfo() {
+    function eliminarInfo() { // Creo una función eliminarInfo que hace una llamada a un API para eliminar la información del usuario usando el método DELETE. En caso de éxito, se vacía el estado info.
         fetch('https://assets.breatheco.de/apis/fake/todos/user/gmm', {
             method: 'DELETE',
             headers: {
@@ -61,28 +61,32 @@ const Home = () => { // declaro los estados//
         });
     }
 
-    useEffect(() => {
-        crearUsuario();
-        obtenerInfo()
+    useEffect(() => {//Se ejecuta una sola vez cuando el componente se monta en el DOM, esto sucede por  la segunda propiedad que es un array vacío [].Dentro de la función useEffect se ejecutan dos funciones:
+        
+        crearUsuario(); //"crearUsuario" hace una petición HTTP POST y envía un JSON vacío con una cabecera de 'Content-Type' como 'application/json' a una URL específica.
+        obtenerInfo() //"obtenerInfo" hace una petición HTTP GET a una URL específica y luego usa setInfo para actualizar el estado con la información obtenida.
     }, [])
 
 
-    useEffect(() => {
-        actualizarInfo()
+    useEffect(() => { //Se ejecuta cada vez que cambia el estado info, eso sucede por a la segunda propiedad [info].
+        actualizarInfo() //"actualizarInfo" hace una petición HTTP PUT a una URL específica, envía un JSON con la información del estado
     }, [info])
     console.log(info)
+   
 
 
     return (
-        <>
-            <div className="card container d-flex bg-success mt-5 md-w75 pb-5">
+        <> 
+            <div className="card container d-flex bg-success mt-5 md-w75 pb-5"> {/* La etiqueta <div> contiene la clase "card" y "container" para establecer el estilo y la disposición de la lista de pendientes. */}
+
                 <h2 className="titulo m-auto p-2">LISTA DE PENDIENTES</h2>
                 <div className="card-body">
                     <input type="text" className="input m-1 w-75"
                         value={pendientes}
                         id="exampleInput"
                         aria-describedby="inputHelp"
-                        onChange={
+                        // onChange actualiza el estado de la lista de pendientes.
+                        onChange={ 
                             (e) => {
                                 setPendientes(e.target.value)
                             }
@@ -100,10 +104,11 @@ const Home = () => { // declaro los estados//
                                 {
                                 item.label
                             }
+                                {/* La función deletePendientes elimina un pendiente específico de la lista. */}
                                 <button className="btn"
                                     onClick={
                                         () => deletePendientes(index)
-                                }>
+                                }> 
                                     <i className="fas fa-trash-alt"/>
                                 </button>
                             </li>
